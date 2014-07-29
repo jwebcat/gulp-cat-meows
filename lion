@@ -1,0 +1,82 @@
+#!/bin/bash
+
+# lion - A script to install Gulp plugins required for dev.
+
+## Function
+function usage
+{
+    echo "[lion] Command Line Usage"
+    echo "sh lion -i or sh lion --install Installing all necessary Gulp plugins required for dev"
+    echo "sh lion -d or sh lion --develop starting dev... Gulp will be watching scss and js file changes"
+    echo "sh lion -b or sh lion --build"
+    echo "sh lion -p or sh lion --package"
+    echo "sh lion -h or sh lion --help lion CLI usage help overview"
+}
+
+## Main
+while [ "$1" != "" ]; do
+    case $1 in
+        -i-n | --install-node  )   echo "[lion] Installing Necessary Gulp Plugins for dev and bower components"
+                            sudo npm install --save-dev gulp gulp-sass gulp-plumber gulp-jshint gulp-rename gulp-minify-css gulp-concat gulp-uglify gulp-wait gulp-notify gulp-autoprefixer browser-sync
+                            echo "[lion] Necessary Gulp Plugins for dev are Installed Successfully"
+                            exit
+                            ;;
+        -d | --develop  )   echo "[lion] Starting Dev: Watching scss html and js Files Change and compiling"
+                            gulp dev
+                            exit
+                            ;;
+        -b | --build  )   echo "[lion] Building Project Files"
+                            gulp build
+                            echo "[lion] lionCat Roars ... Project Built"
+                            exit
+                            ;;
+        -s | --screenshots  )   echo "[lion] gen screenshots with pageres yum... yep... meow"
+                            # if [ ! -f /dist/*.zip ];
+                            #     then
+                            #         rm dist/*.zip && echo " zip cleaned .. meow ..."
+                            # fi
+                            # # Copyright 2009 Daniel Jackoway
+                            # released under the MIT License
+                            # see COPYING for the full text
+                            function gotoroot {
+                            while [ ! -d .git -a ! -f '.this_is_root' -a `pwd` != "/" ]
+                            do
+                                cd "..";
+                            done
+                            }
+                            if test -n "$(find screenshots/ -maxdepth 1 -name '*.png' -print -quit)"
+                            then
+                                gotoroot && echo "rm all the old screenshots" && rm screenshots/* && echo " cleaned existing screenshots" &&\
+                                echo "kitty nap ... meow ..." && sleep 3
+                            else
+                                echo "you have no screenshots in this dir... meow" &&\
+                                gotoroot && mkdir screenshots
+                            fi
+                            gotoroot && cd screenshots && pageres local.wordpress.dev && gotoroot
+                            echo "[lion] lionCat Roars ... screenshots now available for viewing... yep... meowww"
+                            exit
+                            ;;
+        -p | --package  )   echo "[lion] Cleaning out old zip Packaging dist and zipping dist Files"
+                            # if [ ! -f /dist/*.zip ];
+                            #     then
+                            #         rm dist/*.zip && echo " zip cleaned .. meow ..."
+                            # fi
+                            [ -f dist/kinla.zip ] && rm dist/kinla.zip && echo " zip cleaned .. meow ..." || echo "No zips to rm meeeoowwww" &&\
+                            echo "kitty nap ... meow ..." && sleep 3 &&\
+                            cd dist && echo "changing dir to dist for zip... meow ..." && 7za.exe a -tzip kinla.zip ./* && cd -
+                            echo "[lion] lionCat Roars ... dist packed and zipped meow meeeoooww"
+                            exit
+                            ;;
+        -h | --help     )   usage
+                            exit
+                            ;;
+        *               )   echo "[lion] Please pass the available parameters \n"
+                            usage
+                            exit
+    esac
+done
+
+if ["$1" == ""]; then
+    echo "[lion] Please pass the available parameters \n"
+    usage
+fi
